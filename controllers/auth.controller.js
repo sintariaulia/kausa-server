@@ -67,7 +67,7 @@ const loginUser = async (req, res) => {
                 role: user.role
             }
             const secret = process.env.JWT_SECRET;
-            const token = jwt.sign(payload, secret, { expiresIn: '1d' });  // Generate token JWT When Success Login
+            const token = jwt.sign(payload, secret, { expiresIn: '1h' });  // Generate token JWT When Success Login
             res.json({
                 status_code: 200,
                 message: 'Login successful',

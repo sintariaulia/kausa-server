@@ -43,6 +43,33 @@ exports.getProdukById = async (req, res) => {
     }
 };
 
+exports.getProdukByKategori = async (req, res) => {
+    const { nama_kategori } = req.params;
+    try {
+        const produk = await produkModels.getProdukByKategori(nama_kategori);
+        if (produk.length > 0) {
+            res.json({
+                status_code: 200,
+                message: 'Get Produk By Kategori Successfully',
+                datas: produk
+            });
+        } else {
+            res.json({
+                status_code: 404,
+                message: 'Produk Not Found',
+                datas: null
+            });
+        }
+    } catch (error) {
+        console.error('Error Fetching Produk', error);
+        res.status(500).json({
+            message: 'Error Fetching Produk',
+            error: error.message
+        });
+    }
+};
+
+
 exports.createProduk = async (req, res) => {
     try {
         const { kode_produk, kategori_id, nama_produk, deskripsi,  harga, gambar } = req.body;

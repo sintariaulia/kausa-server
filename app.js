@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 // Router
+const aboutUsRouter = require('./routers/aboutus.router');
 const kategoriRouter = require('./routers/kategoris');
 const produkRouter = require('./routers/produks');
 const userRouter = require('./routers/users');
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 })
 
 // ROUTER LOCALHOST
+app.use(aboutUsRouter);
 app.use(kategoriRouter);
 app.use(produkRouter);
 app.use(userRouter);
