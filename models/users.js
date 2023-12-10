@@ -1,4 +1,5 @@
 const connection = require('../connection');
+const bcrypt = require('bcrypt');
 
 class userModels {
     static async getAllUsers() {
@@ -22,15 +23,17 @@ class userModels {
         return { id, nama, no_hp };
     }
 
-    // static async createUser(nama, role, no_hp, email, password) {
-    //     const [result] = await connection.execute(
-    //         'INSERT INTO users (nama, role, no_hp, email, password) VALUES (?, ?, ?, ?, ?)',
-    //         [nama, role, no_hp, email, password]
-    //     );
+    // Just Admin can use this create user
+    static async createUser(nama, role, no_hp, email, password) {
+        const hashedPassword = await bcrypt.hash(password, 10);   // Hash Password
+        const [result] = await connection.execute(
+            'INSERT INTO users (nama, role, no_hp, email, password) VALUES (?, ?, ?, ?, ?)',
+            [nama, role, no_hp, email, hashedPassword]
+        );
 
-    //     const id = result.insertId;
-    //     return { id, nama, role, no_hp, email };
-    // }
+        const id = result.insertId;
+        return { id, nama, role, no_hp, email, password };
+    }
 
 }
 

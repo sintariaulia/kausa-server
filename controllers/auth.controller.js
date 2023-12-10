@@ -63,6 +63,7 @@ const loginUser = async (req, res) => {
             const payload = {
                 id: user.id,
                 nama: user.nama,
+                no_hp: user.no_hp,
                 email: user.email,
                 role: user.role
             }
@@ -73,6 +74,7 @@ const loginUser = async (req, res) => {
                 message: 'Login successful',
                 id: user.id,
                 nama: user.nama,
+                no_hp: user.no_hp,
                 email: user.email,
                 role: user.role,
                 token

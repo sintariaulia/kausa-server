@@ -30,7 +30,7 @@ module.exports = {
         const decoded = jwt.verify(token, secret);
         const { role } = decoded;
         if (!roles.includes(role)) {
-          return res.status(403).json({ message: "Unauthorized" });
+          return res.status(403).json({ message: "Unauthorized Role - Access Denied" });
         }
         req.user = decoded; // Menyimpan data user pada objek req
         next();

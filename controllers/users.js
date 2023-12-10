@@ -1,4 +1,6 @@
 const userModels = require("../models/users");
+const bcrypt = require('bcrypt');
+const authUserModels = require('../models/auth.model');
 
 exports.getAllUsers = async (req, res) => {
     try {
@@ -79,20 +81,37 @@ exports.deleteUser = async (req, res) => {
     }
 }
 
-// exports.createUser = async (req, res) => {
-//     try {
-//         const { nama, role, no_hp, email, password } = req.body;
-//         const newUser = await userModels.createUser(nama, role, no_hp, email, password);
-//         res.json({
-//             status_code: 201,
-//             message: 'User Added Successfully',
-//             datas: newUser
-//         });
-//     } catch (error) {
-//         console.error('Error Creating User', error);
-//         res.status(500).json({
-//             message: 'Error Creating User',
-//             error: error.message
-//         });
-//     }
-// }
+exports.createUser = async (req, res) => {
+    const { nama, role, no_hp, email, password } = req.body;
+    try {
+        // Cek apakah ada email yang sama telah terdaftar
+        const existingUser = await authUserModels.getUserByEmail(email);  // Check email already exists
+        if (existingUser) {
+            return res.json({
+                status_code: 409,
+                message: 'Email Already Exists'
+            });
+        }
+
+        const newUser = await userModels.createUser(nama, role, no_hp, email, password);
+        const hashedPassword = await bcrypt.hash(password, 10); // hash password
+        res.json({
+            status_code: 201,
+            message: 'User Added Successfully By Admin',
+            datas: {
+                id: newUser.id,
+                role: newUser.role,
+                nama: newUser.nama,
+                no_hp: newUser.no_hp,
+                email: newUser.email,
+                hashedPassword
+            }
+        });
+    } catch (error) {
+        console.error('Error Creating User By Admin', error);
+        res.status(500).json({
+            message: 'Error Creating User By Admin',
+            error: error.message
+        });
+    }
+}
