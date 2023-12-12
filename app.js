@@ -8,6 +8,7 @@ const kategoriRouter = require('./routers/kategoris');
 const produkRouter = require('./routers/produks');
 const userRouter = require('./routers/users');
 const pesananRouter = require('./routers/pesanan.router');
+const paymentRouter = require('./routers/payment.router');
 const authRouter = require('./routers/auth.router');
 // Tambahkan middleware untuk mengkonfigurasi parsing body request menjadi JSON
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use(kategoriRouter);
 app.use(produkRouter);
 app.use(userRouter);
 app.use(pesananRouter);
+app.use(paymentRouter);
 app.use('/auth', authRouter);
 // END ROUTER LOCALHOST
 

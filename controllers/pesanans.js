@@ -13,7 +13,7 @@ exports.getAllPesanan = async (req, res) => {
 
         res.json({
             status_code: 200,
-            message: 'Get List Pesanan Successfully',
+            message: 'Get All List Pesanan Successfully',
             datas: pesanan
         });
     } catch (error) {
@@ -27,12 +27,12 @@ exports.getAllPesanan = async (req, res) => {
 
 exports.getPesananByUserId = async (req, res) => {
     try {
-        const { user_id } = req.query;
+        const userId = req.query.user_id;
         let pesanan;
 
-        if (user_id) {
+        if (userId) {
             // Assuming you have a function in pesananModels to get orders by user ID
-            pesanan = await pesananModels.getPesananByUser(user_id);
+            pesanan = await pesananModels.getPesananByUser(userId);
         } else {
             // Assuming you have a function in pesananModels to get all orders
             pesanan = await pesananModels.getAllPesanans();
@@ -65,7 +65,7 @@ exports.getPesananById = async (req, res) => {
         } else {
             res.json({
                 status_code: 404,
-                message: 'Produk Not Found',
+                message: 'Pesanan Not Found',
                 datas: null
             });
         }
@@ -80,8 +80,9 @@ exports.getPesananById = async (req, res) => {
 
 exports.createPesanan = async (req, res) => {
     try {
-        const { user_id, produk_id, quantity, waktu_pickup, total_harga, status_pesanan } = req.body;
-        const newPesanan = await pesananModels.createPesanan(user_id, produk_id, quantity, waktu_pickup, total_harga, status_pesanan);
+        const { produk_id, quantity, waktu_pickup, total_harga, status_pesanan } = req.body;
+        const userId = req.user.id
+        const newPesanan = await pesananModels.createPesanan(userId, produk_id, quantity, waktu_pickup, total_harga, status_pesanan);
         res.json({
             status_code: 201,
             message: "Pesanan Added Successfully",
@@ -99,8 +100,8 @@ exports.createPesanan = async (req, res) => {
 exports.updatePesanan = async (req, res) => {
     const { id } = req.params;
     try {
-        const { total_harga, status_pesanan } = req.body;
-        const pesanan = await pesananModels.updatePesanan(id, total_harga, status_pesanan);
+        const { status_pesanan } = req.body;
+        const pesanan = await pesananModels.updatePesanan(id, status_pesanan);
         res.json({
             status_code: 204,
             message: 'Pesanan Upadated Successfully',

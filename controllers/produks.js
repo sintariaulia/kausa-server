@@ -25,7 +25,7 @@ exports.getProdukById = async (req, res) => {
             res.json({
                 status_code: 200,
                 message: 'Get Produk By Id Successfully',
-                datas: produk
+                produk
             });
         } else {
             res.json({
@@ -72,8 +72,8 @@ exports.getProdukByKategori = async (req, res) => {
 
 exports.createProduk = async (req, res) => {
     try {
-        const { kode_produk, kategori_id, nama_produk, deskripsi,  harga, gambar } = req.body;
-        const newProduk = await produkModels.createProduk(kode_produk, kategori_id, nama_produk, deskripsi,  harga, gambar);
+        const { kategori_id, nama_produk, deskripsi,  harga, gambar } = req.body;
+        const newProduk = await produkModels.createProduk(kategori_id, nama_produk, deskripsi,  harga, gambar);
         res.json({
             status_code: 201,
             message: 'Produk Added Successfully',
