@@ -27,6 +27,7 @@ class produkModels {
         return rows;
     }
 
+    // Create Produk URL old
     static async createProduk(kategori_id, nama_produk, deskripsi, harga, gambar) {
         const query = `INSERT INTO produks (kategori_id, nama_produk, deskripsi, harga, gambar) 
         VALUES (?, ?, ?, ?, ?)`
@@ -35,10 +36,39 @@ class produkModels {
         return { id, kategori_id, nama_produk, deskripsi, harga, gambar };
     }
 
+    // Create produk upload gambar
+    static async createProdukNew(kategori_id, nama_produk, deskripsi, harga, gambar) {
+        try {
+            const query = `INSERT INTO produks (kategori_id, nama_produk, deskripsi, harga, gambar) 
+            VALUES (?, ?, ?, ?, ?)`;
+            const [result] = await connection.execute(query, [kategori_id, nama_produk, deskripsi, harga, gambar]);
+
+            if (result.affectedRows !== 1) {
+                throw new Error('Failed to creating products')
+            }
+
+            const id = result.insertId;
+            return { id, kategori_id, nama_produk, deskripsi, harga, gambar };
+        } catch (error) {
+            console.error('Error creating products:', error.message);
+            throw error; // Rethrow the error for the calling function to handle
+        }
+    }
+
     static async updateProduk(id, nama_produk, deskripsi, harga, gambar) {
-        const query = `UPDATE produks SET nama_produk = ?, deskripsi = ?, harga = ?, gambar = ? WHERE id = ?`;
-        await connection.execute(query, [nama_produk, deskripsi, harga, gambar, id]);
-        return { id, nama_produk, deskripsi, harga, gambar };
+        try {
+            const query = `UPDATE produks SET nama_produk = ?, deskripsi = ?, harga = ?, gambar = ? WHERE id = ?`;
+            const [result] = await connection.execute(query, [nama_produk, deskripsi, harga, gambar, id]);
+
+            if (result.affectedRows !== 1) {
+                throw new Error('Failed to updating products')
+            }
+            
+            return { id, nama_produk, deskripsi, harga, gambar };
+        } catch (error) {
+            console.error('Error updating products:', error.message);
+            throw error; // Rethrow the error for the calling function to handle
+        }
     }
 
     static async deleteProduk(id) {
