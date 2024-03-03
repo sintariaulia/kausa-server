@@ -6,7 +6,7 @@ const {
     updateAboutUs,
     deleteAboutUs
 } = require('../controllers/aboutus.controller');
-const { verifyToken, authorizeRoles } = require('../middleware/auth.middleware');
+// const { verifyToken, authorizeRoles } = require('../middleware/auth.middleware');
 
 // GET
 router.get('/aboutus', getAllAboutUs);

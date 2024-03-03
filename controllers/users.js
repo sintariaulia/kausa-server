@@ -85,7 +85,7 @@ exports.createUser = async (req, res) => {
     const { nama, role, no_hp, email, password } = req.body;
     try {
         // Cek apakah ada email yang sama telah terdaftar
-        const existingUser = await authUserModels.getUserByEmail(email);  // Check email already exists
+        const existingUser = await authUserModels.getUserByEmail(email);
         if (existingUser) {
             return res.json({
                 status_code: 409,
@@ -94,7 +94,7 @@ exports.createUser = async (req, res) => {
         }
 
         const newUser = await userModels.createUser(nama, role, no_hp, email, password);
-        const hashedPassword = await bcrypt.hash(password, 10); // hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
         res.json({
             status_code: 201,
             message: 'User Added Successfully By Admin',

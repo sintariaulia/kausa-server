@@ -1,5 +1,7 @@
 const paymentModels = require("../models/payment.models");
 const upload = require('../config/multer')
+const fs = require("fs");
+
 
 exports.getAllPayment = async (req, res) => {
     try {
@@ -45,55 +47,79 @@ exports.getPaymentById = async (req, res) => {
     }
 }
 
-exports.createPayment = async (req, res) => {
+exports.getPaymentByPesananId = async (req, res) => {
+    const { pesananId } = req.params;
     try {
-        const { pesanan_id, bukti_bayar, status } = req.body;
-        const newPayment = await paymentModels.createPayment(pesanan_id, bukti_bayar, status);
-        res.json({
-            status_code: 201,
-            message: "Payment Added Successfully",
-            datas: newPayment
-        });
-    } catch (error) {
-        console.error('Error Creating Payment', error);
-        res.status(500).json({
-            message: 'Error Creating Payment',
-            error: error.message
-        });
-    }
-}
-
-exports.createPayment = async (req, res) => {
-    try {
-        const { pesanan_id, status } = req.body;
-
-        upload.single('file')(req, res, async function (err) {
-            if (err) {
-                console.error('Error Uploading File', err);
-                return res.status(500).json({
-                    message: 'Error Uploading File',
-                    error: err.message
-                });
-            }
-
-            const bukti_bayar = req.file ? req.file.filename : null;
-
-            const newPayment = await paymentModels.createPayment(pesanan_id, bukti_bayar, status);
-
+        const payment = await paymentModels.getPaymentByPesananId(pesananId);
+        if (payment.length > 0) {
             res.json({
-                status_code: 201,
-                message: "Payment Added Successfully",
-                datas: newPayment
+                status_code: 200,
+                message: 'Get Payment By Pesanan Id Successfully',
+                datas: payment
             });
-        });
+        } else {
+            res.json({
+                status_code: 404,
+                message: 'Payment Not Found for the specified Pesanan Id',
+                datas: null
+            });
+        }
     } catch (error) {
-        console.error('Error Creating Payment', error);
+        console.error('Error Fetching Payment', error);
         res.status(500).json({
-            message: 'Error Creating Payment',
+            message: 'Error Fetching Payment',
             error: error.message
         });
     }
 };
+
+// exports.createPayment = async (req, res) => {
+//     try {
+//         const { pesanan_id, bukti_bayar, status } = req.body;
+//         const newPayment = await paymentModels.createPayment(pesanan_id, bukti_bayar, status);
+//         res.json({
+//             status_code: 201,
+//             message: "Payment Added Successfully",
+//             datas: newPayment
+//         });
+//     } catch (error) {
+//         console.error('Error Creating Payment', error);
+//         res.status(500).json({
+//             message: 'Error Creating Payment',
+//             error: error.message
+//         });
+//     }
+// }
+
+exports.createPayment = async (req, res) => {
+    const { pesanan_id, status } = req.body;
+    const buktiFile = req.file;
+
+    // Set the bukti image path in the blog data
+    let buktiImagePath = "";
+    if (buktiFile) {
+        buktiImagePath = `/buktiPembayaran/${buktiFile.filename}`;
+    }
+
+    try {
+        const createdPayment = await paymentModels.createPayment(pesanan_id, buktiImagePath, status);
+        res.status(200).json(createdPayment);
+    } catch (error) {
+        // Delete the uploaded thumbnail image if there is an error
+        if (buktiFile) {
+            fs.unlinkSync(buktiFile.path);
+        }
+
+        console.error('Error creating payment:', error.message);
+
+        res.status(500).json({
+            message: 'Error creating payment',
+            error: error.message,
+        });
+    }
+
+};
+
 
 exports.updatePayment = async (req, res) => {
     try {

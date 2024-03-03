@@ -31,10 +31,10 @@ exports.getPesananByUserId = async (req, res) => {
         let pesanan;
 
         if (userId) {
-            // Assuming you have a function in pesananModels to get orders by user ID
+            // function in pesananModels to get orders by user ID
             pesanan = await pesananModels.getPesananByUser(userId);
         } else {
-            // Assuming you have a function in pesananModels to get all orders
+            // function in pesananModels to get all orders
             pesanan = await pesananModels.getAllPesanans();
         }
 
