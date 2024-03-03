@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
+const path = require('path')
 // Router
 const aboutUsRouter = require('./routers/aboutus.router');
 const kategoriRouter = require('./routers/kategoris');
@@ -19,6 +20,8 @@ app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+// preview gambar
+app.use(express.static(path.join(__dirname, "public")));
 
 const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
